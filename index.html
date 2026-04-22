@@ -1,0 +1,226 @@
+原本
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>凌聚邏輯能力評測系統</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
+        .container { max-width: 800px; width: 100%; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2563eb; text-align: center; }
+        .status { background: #eef2ff; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; position: sticky; top: 0; z-index: 100; }
+        .user-info { background: #fffbeb; padding: 15px; border-radius: 10px; border: 1px solid #fcd34d; margin-bottom: 20px; text-align: center; }
+        .q-item { margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .q-text { font-size: 18px; margin-bottom: 15px; font-weight: bold; }
+        .option { display: block; margin: 10px 0; padding: 10px; background: #f8fafc; border-radius: 5px; cursor: pointer; }
+        .option:hover { background: #e2e8f0; }
+        #btn-submit { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; }
+        
+        #result { display: none; }
+        .score-box { text-align: center; background: #f8fafc; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
+        .review-item { margin-bottom: 20px; padding: 15px; border-radius: 8px; border-left: 5px solid #ccc; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .correct-review { border-left-color: #22c55e; background: #f0fdf4; }
+        .wrong-review { border-left-color: #ef4444; background: #fef2f2; }
+        .explanation { font-size: 14px; color: #475569; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #cbd5e1; }
+        .timer { color: red; }
+        .ans-label { font-weight: bold; color: #2563eb; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>邏輯能力測驗</h1>
+    
+    <div class="status">
+        <span>測驗題目：10 題</span>
+        <span>剩餘時間：<span id="timer" class="timer">15:00</span></span>
+    </div>
+
+    <div id="quiz-content">
+        <div class="user-info">
+            <label style="font-weight: bold;">應徵者姓名：</label>
+            <input type="text" id="candidate-name" placeholder="請輸入您的姓名" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 200px;">
+        </div>
+
+        <form id="quizForm">
+            <div class="q-item" data-q="1">
+                <div class="q-text">1. 數列規律：2, 6, 12, 20, 30, ( ? )</div>
+                <label class="option"><input type="radio" name="q1" value="38"> 38</label>
+                <label class="option"><input type="radio" name="q1" value="40"> 40</label>
+                <label class="option"><input type="radio" name="q1" value="42"> 42</label>
+                <label class="option"><input type="radio" name="q1" value="46"> 46</label>
+            </div>
+
+            <div class="q-item" data-q="2">
+                <div class="q-text">2. 數列規律：3, 5, 9, 17, 33, ( ? )</div>
+                <label class="option"><input type="radio" name="q2" value="65"> 65</label>
+                <label class="option"><input type="radio" name="q2" value="60"> 60</label>
+                <label class="option"><input type="radio" name="q2" value="50"> 50</label>
+                <label class="option"><input type="radio" name="q2" value="48"> 48</label>
+            </div>
+
+            <div class="q-item" data-q="3">
+                <div class="q-text">3. 若「所有的業務員都是外向的人」且「有些外向的人喜歡旅遊」，下列哪一個推論「絕對」正確？</div>
+                <label class="option"><input type="radio" name="q3" value="A"> 所有的業務員都喜歡旅遊</label>
+                <label class="option"><input type="radio" name="q3" value="B"> 有些業務員喜歡旅遊</label>
+                <label class="option"><input type="radio" name="q3" value="C"> 有些喜歡旅遊的人是外向的人</label>
+                <label class="option"><input type="radio" name="q3" value="D"> 內向的人都不喜歡旅遊</label>
+            </div>
+
+            <div class="q-item" data-q="4">
+                <div class="q-text">4. 某公司規定：「所有通過試用期的員工，都一定參加過新人培訓。」根據此規定，下列推論何者「絕對」正確？</div>
+                <label class="option"><input type="radio" name="q4" value="A"> 小明參加過新人培訓，所以他一定通過了試用期</label>
+                <label class="option"><input type="radio" name="q4" value="B"> 小華沒通過試用期，所以他一定沒參加過新人培訓</label>
+                <label class="option"><input type="radio" name="q4" value="C"> 小強沒有參加過新人培訓，所以他一定沒通過試用期</label>
+                <label class="option"><input type="radio" name="q4" value="D"> 只要參加過新人培訓，就有一半的機率通過試用期</label>
+            </div>
+
+            <div class="q-item" data-q="5">
+                <div class="q-text">5. 森林裡有三種動物：兔子、狐狸、狼。兔子只說實話，狐狸只說謊話，狼則是有時說實話有時說謊。
+甲說：「乙是兔子。」
+乙說：「丙是狐狸。」
+丙說：「甲是狼。」
+已知這三隻動物中，兔子、狐狸、狼各有一隻。請問誰是兔子？</div>
+                <label class="option"><input type="radio" name="q5" value="甲"> 甲</label>
+                <label class="option"><input type="radio" name="q5" value="乙"> 乙</label>
+                <label class="option"><input type="radio" name="q5" value="丙"> 丙</label>
+                <label class="option"><input type="radio" name="q5" value="無"> 無法判斷</label>
+            </div>
+
+            <div class="q-item" data-q="6">
+                <div class="q-text">6.如果 5 台機器在 5 分鐘內能生產 5 個零件，那麼 100 台機器生產 100 個零件需要幾分鐘？</div>
+                <label class="option"><input type="radio" name="q6" value="1"> 1 分鐘</label>
+                <label class="option"><input type="radio" name="q6" value="5"> 5 分鐘</label>
+                <label class="option"><input type="radio" name="q6" value="20"> 20 分鐘</label>
+                <label class="option"><input type="radio" name="q6" value="100"> 100 分鐘</label>
+            </div>
+
+            <div class="q-item" data-q="7">
+                <div class="q-text">7. 王先生有 4 個女兒，每個女兒都有一個哥哥。請問共有幾個小孩？</div>
+                <label class="option"><input type="radio" name="q7" value="4"> 4 個</label>
+                <label class="option"><input type="radio" name="q7" value="5"> 5 個</label>
+                <label class="option"><input type="radio" name="q7" value="8"> 8 個</label>
+                <label class="option"><input type="radio" name="q7" value="9"> 9 個</label>
+            </div>
+
+            <div class="q-item" data-q="8">
+                <div class="q-text">8.  某公司規定：若今天下雨，則員工可以遠端辦公。今天員工小張在辦公室上班，我們可以推斷出：</div>
+                <label class="option"><input type="radio" name="q8" value="A"> 今天沒下雨</label>
+                <label class="option"><input type="radio" name="q8" value="B"> 今天下雨了</label>
+                <label class="option"><input type="radio" name="q8" value="C"> 小張不喜歡遠端</label>
+                <label class="option"><input type="radio" name="q8" value="D"> 以上皆非</label>
+            </div>
+
+            <div class="q-item" data-q="9">
+                <div class="q-text">9.在一個 3x3 的矩陣中，第一列是：三角形、圓形、方形；第二列是：方形、三角形、圓形；第三列是：圓形、方形、？</div>
+                <label class="option"><input type="radio" name="q9" value="三角形"> 三角形</label>
+                <label class="option"><input type="radio" name="q9" value="星形"> 星形</label>
+                <label class="option"><input type="radio" name="q9" value="圓形"> 圓形</label>
+                <label class="option"><input type="radio" name="q9" value="梯形"> 梯形</label>
+            </div>
+
+            <div class="q-item" data-q="10">
+                <div class="q-text">10. 一個時鐘在 3:15 時，時針與分針的夾角是幾度？</div>
+                <label class="option"><input type="radio" name="q10" value="0"> 0 度</label>
+                <label class="option"><input type="radio" name="q10" value="7.5"> 7.5 度</label>
+                <label class="option"><input type="radio" name="q10" value="15"> 15 度</label>
+                <label class="option"><input type="radio" name="q10" value="22.5"> 22.5 度</label>
+            </div>
+
+            <button type="button" id="btn-submit" onclick="showScore()">提交測驗</button>
+        </form>
+    </div>
+
+    <div id="result">
+        <div class="score-box">
+            <h2>測驗報告</h2>
+            <p id="display-name" style="font-size: 20px; font-weight: bold; color: #2563eb;"></p>
+            <p>您的得分為：</p>
+            <div id="final-score" style="font-size: 60px; color: #2563eb; font-weight: bold;">0</div>
+            <p style="color: red; font-weight: bold;">(本測驗每人僅限施測一次)</p>
+        </div>
+        
+        <h3 style="border-left: 5px solid #2563eb; padding-left: 10px;">題目詳解</h3>
+        <div id="review-content"></div>
+    </div>
+</div>
+
+<script>
+    const solutions = {
+        q1: { ans: "42", exp: "數列規律為：2(+4)→6(+6)→12(+8)→20(+10)→30，下一個應加 12，故為 42。" },
+        q2: { ans: "65", exp: "規律為前一數 × 2 - 1：(3×2-1=5), (5×2-1=9)... (33×2-1=65)。" },
+        q3: { ans: "C", exp: "「有些外向人喜歡旅遊」反過來說就是「有些喜歡旅遊的人是外向的人」。A與B無法從前提百分之百斷定。" },
+        q4: { ans: "C", exp: "「若 P 則 Q」 等同於 「若非 Q 則非 P」；所以「沒有培訓（非 Q）」就「絕對不可能通過試用（非 P）」" },
+        q5: { ans: "丙", exp: "假設丙是兔子(說實話)，則甲是狼；甲說乙是兔子就是說謊，所以乙是狐狸，符合各一隻的條件。" },
+        q6: { ans: "5", exp: "每台機器生產一個零件的速度是5分鐘。增加機器與零件數量，時間依然維持不變。" },
+        q7: { ans: "5", exp: "四個女兒共用同一個哥哥，所以小孩總數是 4 + 1 = 5 個。" },
+        q8: { ans: "A", exp: "邏輯推論中的「若P則Q」。若Q(遠端)沒發生，則P(下雨)必定沒發生。" },
+        q9: { ans: "三角形", exp: "每一列與每一行中，三個圖形必須各出現一次。" },
+        q10: { ans: "7.5", exp: "分針走 15 分時，時針也移動了 30° × (15/60) = 7.5°。" }
+    };
+
+    let timeLeft = 900;
+    const timerElem = document.getElementById('timer');
+    const interval = setInterval(() => {
+        let m = Math.floor(timeLeft / 60);
+        let s = timeLeft % 60;
+        timerElem.innerText = m + ":" + (s < 10 ? "0" + s : s);
+        if (timeLeft <= 0) { clearInterval(interval); showScore(); }
+        timeLeft--;
+    }, 1000);
+
+    function showScore() {
+        const nameInput = document.getElementById('candidate-name');
+        const name = nameInput.value.trim();
+        if (!name) {
+            alert("請輸入姓名後再提交！");
+            return;
+        }
+
+        clearInterval(interval);
+        let score = 0;
+        let reviewHtml = "";
+        const form = document.getElementById('quizForm');
+        
+        for (let i = 1; i <= 10; i++) {
+            const qKey = "q" + i;
+            const selected = form.elements[qKey].value;
+            const isCorrect = (selected === solutions[qKey].ans);
+            if (isCorrect) score += 10;
+            
+            const qText = document.querySelector(`[data-q="${i}"] .q-text`).innerText;
+            reviewHtml += `
+                <div class="review-item ${isCorrect ? 'correct-review' : 'wrong-review'}">
+                    <strong>${qText}</strong><br>
+                    您的答案：${selected || "未填寫"} ${isCorrect ? '✓' : '✗'}<br>
+                    <span class="ans-label">正確答案：${solutions[qKey].ans}</span>
+                    <div class="explanation"><strong>解析：</strong>${solutions[qKey].exp}</div>
+                </div>
+            `;
+        }
+        
+        // 鎖定邏輯：儲存到瀏覽器
+        localStorage.setItem('logicQuizDone', 'true');
+        localStorage.setItem('logicQuizName', name);
+        localStorage.setItem('logicQuizScore', score);
+        localStorage.setItem('logicQuizReview', reviewHtml);
+
+        renderResult(name, score, reviewHtml);
+    }
+
+    function renderResult(name, score, review) {
+        document.getElementById('quiz-content').style.display = 'none';
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('display-name').innerText = "應徵者：" + name;
+        document.getElementById('final-score').innerText = score;
+        document.getElementById('review-content').innerHTML = review;
+        window.scrollTo(0, 0);
+    }
+
+
+
+</script>
+
+</body>
+</html>
