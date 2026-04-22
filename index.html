@@ -154,6 +154,8 @@
         q10: { ans: "7.5", exp: "分針走 15 分時，時針也移動了 30° × (15/60) = 7.5°。" }
     };
 
+    };
+
     let timeLeft = 900;
     const timerElem = document.getElementById('timer');
     const interval = setInterval(() => {
@@ -193,6 +195,25 @@
                 </div>
             `;
         }
+        
+        // 鎖定邏輯：儲存到瀏覽器
+        localStorage.setItem('logicQuizDone', 'true');
+        localStorage.setItem('logicQuizName', name);
+        localStorage.setItem('logicQuizScore', score);
+        localStorage.setItem('logicQuizReview', reviewHtml);
+
+        renderResult(name, score, reviewHtml);
+    }
+
+    function renderResult(name, score, review) {
+        document.getElementById('quiz-content').style.display = 'none';
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('display-name').innerText = "應徵者：" + name;
+        document.getElementById('final-score').innerText = score;
+        document.getElementById('review-content').innerHTML = review;
+        window.scrollTo(0, 0);
+    }
+
 
 
 </script>
